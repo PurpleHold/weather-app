@@ -1,0 +1,1 @@
+(()=>{const o=prompt("Enter a city");console.log(o),async function(){const a=await fetch(`https://api.weatherapi.com/v1/forecast.json?key=ed25e7b75ea847cabdb165554231711&days=3&q=${o}`,{mode:"cors"}),t=await a.json();console.log(t)}()})();

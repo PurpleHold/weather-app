@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <script src="./main.js" defer></script> -->
+    <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body>
+    <script>
+        const cityInput = prompt("Enter a city");
+        
+        let weather;
+        async function getWeather() {
+            const forecast = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=ed25e7b75ea847cabdb165554231711&days=3&q=${cityInput}`, 
+            {mode: 'cors'});
+            const forecastData = await forecast.json();
+            console.log(forecastData);
+            weather = forecastData;
+            showWeather();
+        }
+        getWeather();
+        
+
+        
+        function showWeather() {
+            console.log(`Météo pour ${weather.location.name}:`);
+            console.log(`Il fait actuellement ${weather.current.temp_c}°c`);
+            console.log(`Précipitations attendues (mm): ${weather.current.precip_mm}:`);
+        }
+
+    </script>
+    
+</body>
+</html>
