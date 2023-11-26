@@ -1,0 +1,53 @@
+body {
+    margin: 0px;
+}
+
+.global-container, .menu, .main-contents, .current-weather {
+    display: grid;
+}
+.global-container {
+    height: 100vh;
+    align-items: start;
+    grid-template-rows: 85px 1fr;
+}
+.menu {
+    grid-template-areas: "logo search after";
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    padding: 0rem 3rem;
+}
+.main-contents {
+    gap: 7rem;
+    padding: 2rem 3rem;
+}
+
+/* Menu */
+.logo {
+    grid-area: logo;
+}
+.search-city {
+    grid-area: search;
+    justify-self: center;
+}
+
+/* Main Contents */
+.current-weather {
+    grid-template-areas: "current-header current-header"
+        "current-temp current-info";
+    align-items: center;
+    justify-content: space-between;
+}
+.current-header {
+    grid-area: current-header;
+}
+.current-temp-group {
+    grid-area: current-temp;
+}
+.current-info {
+    grid-area: current-info;
+}
+
+.forecast {
+    display: flex;
+    justify-content: space-between;
+}
