@@ -11,13 +11,36 @@
     <script>
         const cityInput = prompt("Enter a city");
         
+        function pick(obj, ...props) {
+        return props.reduce(function(result, prop) {
+            result[prop] = obj[prop];
+            return result;
+        }, {});
+}
+
+
         let weather;
         async function getWeather() {
-            const forecast = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=ed25e7b75ea847cabdb165554231711&days=3&q=${cityInput}`, 
+            const weatherForecast = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=ed25e7b75ea847cabdb165554231711&days=3&q=${cityInput}`, 
             {mode: 'cors'});
-            const forecastData = await forecast.json();
-            console.log(forecastData);
-            weather = forecastData;
+            const forecastData = await weatherForecast.json();
+
+            sortedCurrentData = pick(forecastData.current, 'condition', 'feelslike_c', 'humidity',
+            'precip_mm', 'temp_c', 'wind_kph');
+            sortedLocData = pick(forecastData.location, 'country', 'name', 'region', 'localtime');
+            forecastArray = forecastData.forecast.forecastday;
+            sortedTomorrow = pick(forecastArray[1], 'date', 'day');
+            sortedAfterTomorrow = pick(forecastArray[2], 'date', 'day');
+            weather = {
+                current: sortedCurrentData,
+                location: sortedLocData,
+                tomorrow: sortedTomorrow,
+                afterTomorrow: sortedAfterTomorrow
+            }
+            
+            console.log(weather);
+            console.log(sortedCurrentData);
+            console.log(sortedLocData);
             showWeather();
         }
         getWeather();
