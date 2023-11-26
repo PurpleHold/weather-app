@@ -3,11 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>WeatherApp</title>
     <!-- <script src="./main.js" defer></script> -->
     <link rel="stylesheet" href="../dist/styles.css">
 </head>
 <body>
+    <div class="global-container">
+        <div class="menu">
+            <div class="logo">
+                <h1>WeatherApp</h1>
+            </div>
+            <div class="search-city">
+                <input type="search" id ="search-city" placeholder="Rechercher une ville" aria-label="Chercher les prévisions météo d'une ville">
+                <button type="button">Rechercher</button>
+            </div>
+        </div>
+        <div class="current-weather">
+            <div class="current-header"></div>
+            <div class="current-temp"></div>
+            <div class="current-info"></div>
+        </div>
+        <div class="forecast">
+            <div class="tomorrow">
+                <div class="tomorrow-header">Demain</div>
+                <div class="tomorrow-info"></div>
+            </div>
+            <div class="aft-tmw">
+                <div class="after-tomorrow-header">Après-demain</div>
+                <div class="after-tomorrow-info"></div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const cityInput = prompt("Enter a city");
         
@@ -21,7 +48,7 @@
 
         let weather;
         async function getWeather() {
-            const weatherForecast = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=ed25e7b75ea847cabdb165554231711&days=3&q=${cityInput}`, 
+            const weatherForecast = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=ed25e7b75ea847cabdb165554231711&lang=fr&days=3&q=${cityInput}`, 
             {mode: 'cors'});
             const forecastData = await weatherForecast.json();
 
@@ -35,22 +62,54 @@
                 current: sortedCurrentData,
                 location: sortedLocData,
                 tomorrow: sortedTomorrow,
-                afterTomorrow: sortedAfterTomorrow
+                ['after-tomorrow']: sortedAfterTomorrow
             }
             
             console.log(weather);
-            console.log(sortedCurrentData);
-            console.log(sortedLocData);
-            showWeather();
+            showWeather.today('current');
+            showWeather.today('tomorrow');
+            showWeather.today('after-tomorrow');
         }
         getWeather();
         
 
         
-        function showWeather() {
-            console.log(`Météo pour ${weather.location.name}:`);
-            console.log(`Il fait actuellement ${weather.current.temp_c}°c`);
-            console.log(`Précipitations attendues (mm): ${weather.current.precip_mm}:`);
+        let showWeather = {
+            today(day) {
+            let info = document.querySelector(`.${day}-info`);
+            
+                if (day=='current') {
+                    let header = document.querySelector(`.${day}-header`);
+                    let hourOnly = weather.location.localtime.slice(-6);
+                    let temp = document.querySelector(`.${day}-temp`);
+
+                    header.innerHTML=`<span class="loc-name">${weather.location.name}</span>
+                    <span class="country">${weather.location.country}</span>
+                    <span class="region">${weather.location.region}</span>
+                    <span class="local-time">${hourOnly}</span>`;
+
+                    temp.innerHTML=`<div class="current-temp">${weather.current.temp_c}<span class="celsius">°C</span></div>
+                    <div class="felt-temp">Ressenti: ${weather.current.feelslike_c}<span class="celsius">°C</span></div>`;
+
+                    info.innerHTML=`<div class="conditions"><img src="https:${weather.current.condition.icon}" alt="${weather.current.condition.text}">
+                    <span class="conditions-text">${weather.current.condition.text}</span></div>
+                    <div class="precip">Précipitations: ${weather.current.precip_mm}mm</div>
+                    <div class="humidity">Humidité: ${weather.current.humidity}%</div>
+                    <div class="wind">Vent: ${weather.current.wind_kph}km/h</div>`;
+                };
+                
+                if (day!=='current') {
+                    info.innerHTML=`<div class="mean-temp">Température moyenne: ${weather[day].day.avgtemp_c}<span class="celsius">°C</span></div>
+                    <div class="conditions"><img src="https:${weather[day].day.condition.icon}" alt="${weather[day].day.condition.text}">
+                    <span class="conditions-text">${weather[day].day.condition.text}</span></div>
+                    <div class="wind">Vent: ${weather[day].day.maxwind_kph}km/h</div>`;
+                }
+            
+            },
+
+            tomorrow() {
+
+            }
         }
 
     </script>
