@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WeatherApp</title>
-    <!-- <script src="./main.js" defer></script> -->
+    <script src="./main.js" defer></script>
     <link rel="stylesheet" href="../dist/styles.css">
 </head>
 <body>
@@ -14,15 +14,21 @@
                 <h1>WeatherApp</h1>
             </div>
             <div class="search-city">
-                <input type="search" id ="search-city" placeholder="Rechercher une ville" aria-label="Chercher les prévisions météo d'une ville">
-                <button type="button">Rechercher</button>
+                <form id="search-form" action="" method="post">
+                    <input type="text" id ="search-city" name="search-city" placeholder="Entrez le nom d'une ville..." aria-label="Chercher les prévisions météo d'une ville" pattern="^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$">
+                    <button type="submit" class="search-btn">Rechercher</button>
+                </form>
             </div>
         </div>
+        
         <div class="main-contents">
             <div class="current-weather">
-                <div class="current-header"></div>
-                <div class="current-temp"></div>
-                <div class="current-info"></div>
+                <div class="current-group">
+                    <div class="current-header"></div>
+                    <div class="current-temp"></div>
+                    <div class="current-conditions"></div>
+                    <div class="current-info"></div>
+                </div>
             </div>
             <div class="forecast">
                 <div class="tomorrow">
@@ -36,85 +42,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        const cityInput = prompt("Enter a city");
-        
-        function pick(obj, ...props) {
-        return props.reduce(function(result, prop) {
-            result[prop] = obj[prop];
-            return result;
-        }, {});
-}
-
-
-        let weather;
-        async function getWeather() {
-            const weatherForecast = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=ed25e7b75ea847cabdb165554231711&lang=fr&days=3&q=${cityInput}`, 
-            {mode: 'cors'});
-            const forecastData = await weatherForecast.json();
-
-            sortedCurrentData = pick(forecastData.current, 'condition', 'feelslike_c', 'humidity',
-            'precip_mm', 'temp_c', 'wind_kph');
-            sortedLocData = pick(forecastData.location, 'country', 'name', 'region', 'localtime');
-            forecastArray = forecastData.forecast.forecastday;
-            sortedTomorrow = pick(forecastArray[1], 'date', 'day');
-            sortedAfterTomorrow = pick(forecastArray[2], 'date', 'day');
-            weather = {
-                current: sortedCurrentData,
-                location: sortedLocData,
-                tomorrow: sortedTomorrow,
-                ['after-tomorrow']: sortedAfterTomorrow
-            }
-            
-            console.log(weather);
-            showWeather.today('current');
-            showWeather.today('tomorrow');
-            showWeather.today('after-tomorrow');
-        }
-        getWeather();
-        
-
-        
-        let showWeather = {
-            today(day) {
-            let info = document.querySelector(`.${day}-info`);
-            
-                if (day=='current') {
-                    let header = document.querySelector(`.${day}-header`);
-                    let hourOnly = weather.location.localtime.slice(-6);
-                    let temp = document.querySelector(`.${day}-temp`);
-
-                    header.innerHTML=`<span class="loc-name">${weather.location.name}</span>
-                    <span class="country">${weather.location.country}</span>
-                    <span class="region">${weather.location.region}</span>
-                    <span class="local-time">${hourOnly}</span>`;
-
-                    temp.innerHTML=`<div class="current-temp">${weather.current.temp_c}<span class="celsius">°C</span></div>
-                    <div class="felt-temp">Ressenti: ${weather.current.feelslike_c}<span class="celsius">°C</span></div>`;
-
-                    info.innerHTML=`<div class="conditions"><img src="https:${weather.current.condition.icon}" alt="${weather.current.condition.text}">
-                    <span class="conditions-text">${weather.current.condition.text}</span></div>
-                    <div class="precip">Précipitations: ${weather.current.precip_mm}mm</div>
-                    <div class="humidity">Humidité: ${weather.current.humidity}%</div>
-                    <div class="wind">Vent: ${weather.current.wind_kph}km/h</div>`;
-                };
-                
-                if (day!=='current') {
-                    info.innerHTML=`<div class="mean-temp">Température moyenne: ${weather[day].day.avgtemp_c}<span class="celsius">°C</span></div>
-                    <div class="conditions"><img src="https:${weather[day].day.condition.icon}" alt="${weather[day].day.condition.text}">
-                    <span class="conditions-text">${weather[day].day.condition.text}</span></div>
-                    <div class="wind">Vent: ${weather[day].day.maxwind_kph}km/h</div>`;
-                }
-            
-            },
-
-            tomorrow() {
-
-            }
-        }
-
-    </script>
-    
 </body>
 </html>

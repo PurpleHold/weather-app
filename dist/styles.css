@@ -1,53 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
 body {
     margin: 0px;
+    font-family: 'Open Sans', sans-serif;
+    color: #160f9f;
+}
+button, label, input, select, progress, meter {
+    font-family: inherit;
+    font-size: 100%;
+    border: none;
+    margin: 0;
+    box-sizing: border-box;
+    width: 100%;
+}
+button {
+    transition: all 0.2s;
 }
 
-.global-container, .menu, .main-contents, .current-weather {
+.global-container, .menu, .main-contents, .current-weather, .current-group, .forecast {
     display: grid;
+}
+.current-group, input#search-city, .menu button {
+    border-radius: 15px;
 }
 .global-container {
     height: 100vh;
     align-items: start;
-    grid-template-rows: 85px 1fr;
+    grid-template-rows: 85px auto 2fr 1fr;
+    background: linear-gradient(#88e1ea, #d3d7fd);
 }
+.current-group, .forecast {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 0rem 3rem;
+}
+
+
 .menu {
-    grid-template-areas: "logo search after";
     grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
     padding: 0rem 3rem;
 }
+.search-city {
+    justify-self: center;
+}
+form#search-form {
+    display: flex;
+    gap: 1rem;
+}
+input#search-city {
+    padding-left: 1rem;
+    font-style: italic;
+}
+.menu button {
+    text-align: right;
+    max-width: fit-content;
+    padding: 0.5rem 1rem;
+    background: none;
+    border: 2px solid #160f9f;
+    color: #160f9f;
+}
+.menu button:hover {
+    background: #160f9f;
+    color: #fff;
+    cursor: pointer;
+}
+
+
 .main-contents {
     gap: 7rem;
     padding: 2rem 3rem;
+    justify-content: center;
 }
-
-/* Menu */
-.logo {
-    grid-area: logo;
+.current-group {
+    background: #fff;
+    padding: 4rem 3rem;
 }
-.search-city {
-    grid-area: search;
-    justify-self: center;
-}
-
-/* Main Contents */
 .current-weather {
-    grid-template-areas: "current-header current-header"
-        "current-temp current-info";
-    align-items: center;
-    justify-content: space-between;
+    border-bottom: 5px dotted #160f9f;
+    padding-bottom: 5rem;
 }
 .current-header {
-    grid-area: current-header;
+    letter-spacing: 1px;
 }
-.current-temp-group {
-    grid-area: current-temp;
+.loc-name {
+    font-size: 4rem;
+    font-style: normal;
+    font-weight: bolder;
+    line-height: 1;
+    max-width: 400px;
+    word-break: break-word;
 }
-.current-info {
-    grid-area: current-info;
+.loc-info, .local-hour {
+    font-size: 1.2rem;
+}
+.loc-info {
+    font-style: italic;
+    max-width: 300px;
+}
+.temp-nb {
+    font-size: 8rem;
+}
+.temp-nb .celsius {
+    font-size: 3rem;
+}
+.temp-line {
+    font-size: 1.25rem;
+}
+.felt-temp {
+    font-size: 2rem;
+    padding: 0rem 0.5rem;
 }
 
-.forecast {
+
+.conditions {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+.current-weather .conditions-text {
+    font-size: 1.75rem;
+    font-style: normal;
+    line-height: 1;
+    max-width: 250px;
+}
+.current-info {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.2rem;
+}
+
+
+.after-tomorrow-header, .tomorrow-header {
+    font-size: 2rem;
+}
+.forecast .conditions-text {
+    font-size: 1.25rem;
 }
